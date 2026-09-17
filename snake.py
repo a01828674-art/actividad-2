@@ -1,15 +1,13 @@
-"""Snake, classic arcade game.
-
-Exercises
-
-1. How do you make the snake faster or slower?
-2. How can you make the snake go around the edges?
-3. How would you move the food?
-4. Change the snake to respond to mouse clicks.
-"""
 from random import choice, randrange
 from turtle import *
 from freegames import square, vector
+
+# Lista de 5 colores permitidos (sin incluir el rojo)
+COLORES_DISPONIBLES = ['blue', 'green', 'purple', 'orange', 'brown']
+
+# Elegir colores aleatorios diferentes para la serpiente y la comida al iniciar
+color_serpiente = choice(COLORES_DISPONIBLES)
+color_comida = choice([c for c in COLORES_DISPONIBLES if c != color_serpiente])
 
 food = vector(0, 0)
 snake = [vector(10, 0)]
@@ -17,7 +15,7 @@ aim = vector(0, -10)
 
 
 def change(x, y):
-  """Change snake direction."""
+  "))Change snake direction."""
   aim.x = x
   aim.y = y
 
@@ -25,6 +23,19 @@ def change(x, y):
 def inside(head):
   """Return True if head inside boundaries."""
   return -200 < head.x < 190 and -200 < head.y < 190
+
+
+def draw_boundaries():
+  """Draw visible walls around the play area."""
+  up()
+  goto(-200, -200)
+  down()
+  color('gray')
+  width(2)
+  for _ in range(4):
+    forward(390)
+    left(90)
+  up()
 
 
 def move():
@@ -57,10 +68,13 @@ def move():
 
   clear()
 
-  for body in snake:
-    square(body.x, body.y, 9, 'black')
+  # Redibujar las paredes estáticas en cada fotograma
+  draw_boundaries()
 
-  square(food.x, food.y, 9, 'green')
+  for body in snake:
+    square(body.x, body.y, 9, color_serpiente)
+
+  square(food.x, food.y, 9, color_comida)
   update()
   ontimer(move, 200)
 
@@ -73,5 +87,9 @@ onkey(lambda: change(10, 0), 'Right')
 onkey(lambda: change(-10, 0), 'Left')
 onkey(lambda: change(0, 10), 'Up')
 onkey(lambda: change(0, -10), 'Down')
+
+# Dibujar las paredes al iniciar el juego
+draw_boundaries()
+
 move()
 done()
